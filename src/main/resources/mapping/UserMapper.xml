@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.sys.mapper.UserMapper">
+
+    <select id="queryRoleByUserName" resultType="com.example.demo.sys.entity.Role" parameterType="java.lang.String">
+        SELECT
+            t1.id,
+            t1.`name`,
+            t1.age,
+            t1.email,
+            t1.`password`,
+            t2.id,
+            t2.user_id,
+            t2.role_id,
+            t3.id,
+            t3.role_name,
+            t3.role_description
+        FROM
+            `user` AS t1
+                LEFT JOIN user_role AS t2 ON t1.id = t2.user_id
+                INNER JOIN role AS t3 ON t2.role_id = t3.id
+        WHERE
+            `name` = #{userName}
+    </select>
+    <select id="queryUserList" resultType="com.example.demo.sys.entity.User">
+        select *
+        from user;
+    </select>
+</mapper>

@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+
+
+mybatis-plus:
+  mapper-locations: classpath*:mapping/*.xml
+
+logging:
+  level:
+    com.example.demo.sys.mapper: debug
+#日志
