@@ -1,0 +1,51 @@
+package com.example.demo.security.controller;
+
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.security.entity.TsPermissions;
+import com.example.demo.security.entity.TsUser;
+import com.example.demo.security.service.ITsUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author jobob
+ * @since 2018-12-17
+ */
+@RestController
+@RequestMapping("/security/ts-user")
+@Api(description = "用户管理")
+public class TsUserController {
+
+    @Autowired
+    private ITsUserService iTsUserService;
+
+    @ApiOperation("查询所有的用户列表")
+    @GetMapping("/query/users")
+    public List<TsUser> queryUserList(){
+        return iTsUserService.list();
+    }
+
+    @ApiOperation("查询所有的用户列表")
+    @PostMapping("/query/page/users")
+    public IPage<TsUser> queryUserListPage(@RequestBody TsPermissions tsPermissions){
+        QueryWrapper wrapper = new QueryWrapper();
+        IPage<TsUser> page = new Page<TsUser>();
+        page.setCurrent(1);
+        page.setSize(10);
+        IPage<TsUser> pageUser = iTsUserService.page(page);
+
+        return pageUser;
+    }
+
+}

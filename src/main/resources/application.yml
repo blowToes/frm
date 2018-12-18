@@ -4,7 +4,7 @@ spring:
 
 
 mybatis-plus:
-  mapper-locations: classpath*:mapping/*.xml
+  mapper-locations: classpath*:mapping/**/*.xml
 
 #日志
 logging:
