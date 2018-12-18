@@ -6,7 +6,7 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:mapping/*.xml
 
+#日志
 logging:
   level:
     com.example.demo.sys.mapper: debug
-#日志
