@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2018-12-17
  */
 @RestController
-@RequestMapping("/security/ts-user")
+@RequestMapping("/api/security/ts-user")
 @Api(description = "用户管理")
 public class TsUserController {
 
@@ -37,15 +37,32 @@ public class TsUserController {
     }
 
     @ApiOperation("查询所有的用户列表")
-    @PostMapping("/query/page/users")
-    public IPage<TsUser> queryUserListPage(@RequestBody TsPermissions tsPermissions){
+    @PostMapping(value = "/query/page/users")
+    public IPage<TsUser> queryUserListPage(TsPermissions tsPermissions){
         QueryWrapper wrapper = new QueryWrapper();
         IPage<TsUser> page = new Page<TsUser>();
         page.setCurrent(1);
         page.setSize(10);
         IPage<TsUser> pageUser = iTsUserService.page(page);
-
         return pageUser;
     }
+
+    @ApiOperation("查询单个信息")
+    @GetMapping("/query/user")
+    public List<TsUser> queryUser(@RequestParam String account,@RequestParam String sex){
+
+        TsUser user = new TsUser();
+        user.setAccount(account);
+        user.setSex(sex);
+        QueryWrapper wrapper = new QueryWrapper(user);
+       return iTsUserService.list(wrapper);
+    }
+
+
+
+
+
+
+
 
 }

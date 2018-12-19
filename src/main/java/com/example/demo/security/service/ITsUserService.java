@@ -1,7 +1,10 @@
 package com.example.demo.security.service;
 
+import com.example.demo.security.dto.RolePermissions;
 import com.example.demo.security.entity.TsUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2018-12-17
  */
 public interface ITsUserService extends IService<TsUser> {
-
+    List<RolePermissions> queryRolePermissions(String username);
 }

@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2018-12-17
  */
 public interface TsRoleMapper extends BaseMapper<TsRole> {
-
 }
