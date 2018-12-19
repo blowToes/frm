@@ -54,7 +54,7 @@ public class LoginController {
     @PostMapping(value = "/register")
     public ResponseMessageEntity<String> register(@RequestBody TsUser user) {
         iTsUserService.register(user);
-        return Results.success(MessageUtil.LOGOUT_SUCCESS);
+        return Results.success(MessageUtil.REGISTER_SUCCESS);
     }
 
 }
