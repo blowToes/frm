@@ -3,7 +3,6 @@ package com.example.demo.shiro;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.security.dto.RolePermissions;
 import com.example.demo.security.entity.TsUser;
-import com.example.demo.security.service.ITsRoleService;
 import com.example.demo.security.service.ITsUserService;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authc.*;
@@ -11,6 +10,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,8 @@ public class ShiroRealm extends AuthorizingRealm {
         TsUser dataUser = iTsUserService.getOne(wrapper);
         if (null == token.getPassword()) throw new AccountException("密码不能为空");
         LOGGER.info(" ============ 认证 doGetAuthenticationInfo ====================");
-        return new SimpleAuthenticationInfo(dataUser.getAccount(), dataUser.getPwdword(), getName());
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(dataUser.getAccount(), dataUser.getPwdword(),ByteSource.Util.bytes(dataUser.getAccount()), getName());
+        return simpleAuthenticationInfo;
     }
     /**
      *  将角色和权限添加到SimpleAuthorizationInfo中

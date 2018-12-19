@@ -1,5 +1,7 @@
 package com.example.demo.shiro;
 
+import org.apache.shiro.authc.credential.CredentialsMatcher;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -45,7 +47,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
 
-
     // 设置SecurityManager
     @Bean
     public SecurityManager securityManager() {
@@ -54,16 +55,24 @@ public class ShiroConfig {
         return securityManager;
     }
 
-
     // 自定义认证的Realm
     @Bean
     public ShiroRealm customRealm() {
-        return new ShiroRealm();
+        ShiroRealm shiroRealm = new ShiroRealm();
+        shiroRealm.setCredentialsMatcher(credentialsMatcher());
+        return shiroRealm;
     }
-
 
     @Bean
     public TokenFilter tokenFilter() {
         return new TokenFilter();
+    }
+
+    @Bean
+    public CredentialsMatcher credentialsMatcher() {
+        HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+        matcher.setHashAlgorithmName("md5");
+        matcher.setHashIterations(1024);
+        return matcher;
     }
 }

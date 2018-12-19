@@ -15,5 +15,8 @@ import java.util.List;
  * @since 2018-12-17
  */
 public interface ITsUserService extends IService<TsUser> {
+
+    TsUser register(TsUser tsUser);
+
     List<RolePermissions> queryRolePermissions(String username);
 }

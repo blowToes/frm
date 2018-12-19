@@ -1,11 +1,16 @@
 package com.example.demo.common;
 
-
 import lombok.Data;
 
+/**
+ * @ClassName ResponseMessageEntity
+ * @Description TO_DO
+ * @Author ZHAAIKAIXUAN
+ * @Date 2018/12/19 11:20
+ * @Version 1.0
+ */
 @Data
-public class BaseEntity<T> {
-
+public class ResponseMessageEntity<T> {
     /**
      * 用户令牌
      */
@@ -27,32 +32,19 @@ public class BaseEntity<T> {
      */
     T data;
 
-    public BaseEntity() {
+    public ResponseMessageEntity() {
     }
 
-    public BaseEntity(String token, String code) {
-        this.token = token;
-        this.code = code;
-    }
-
-    public BaseEntity(String token, String code, String message) {
+    public ResponseMessageEntity(String token, String code, String message) {
         this.token = token;
         this.code = code;
         this.message = message;
     }
 
-    public BaseEntity(String token, String code, String message, T data) {
+    public ResponseMessageEntity(String token, String code, String message, T data) {
         this.token = token;
         this.code = code;
         this.message = message;
         this.data = data;
     }
-
-    /**
-     * 构建数据格式
-     */
-    public static BaseEntity success(){
-        return new BaseEntity();
-    }
-
 }
