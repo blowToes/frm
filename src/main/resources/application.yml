@@ -10,3 +10,5 @@ mybatis-plus:
 logging:
   level:
     com.example.demo.sys.mapper: debug
+
+restPath: /api

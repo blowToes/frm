@@ -87,7 +87,7 @@ public class ShiroRealm extends AuthorizingRealm {
         List<RolePermissions> rolePermissions = iTsUserService.queryRolePermissions(username);
         rolePermissions.forEach(rolePermission -> {
             roles.add(rolePermission.getRole_name());
-            permissions.add(rolePermission.getPermission_url());
+            permissions.add(rolePermission.getPermission_name());
         });
         authorizationInfo.setRoles(roles);
         authorizationInfo.setStringPermissions(permissions);

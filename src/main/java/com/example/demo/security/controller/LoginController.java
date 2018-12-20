@@ -53,6 +53,8 @@ public class LoginController {
     @ApiOperation("注册")
     @PostMapping(value = "/register")
     public ResponseMessageEntity<String> register(@RequestBody TsUser user) {
+
+        iTsUserService.save(user);
         iTsUserService.register(user);
         return Results.success(MessageUtil.REGISTER_SUCCESS);
     }
