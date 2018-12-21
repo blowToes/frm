@@ -24,6 +24,7 @@ public class Results {
         return new ResponseMessageEntity(code, msg, ResponseEnum.SUCCESS.getStatus());
     }
 
+
     // 失败返回
     public static ResponseMessageEntity error() {
         return new ResponseMessageEntity(ResponseEnum.ERROR.getCode(), ResponseEnum.ERROR.getMsg(), ResponseEnum.ERROR.getStatus());

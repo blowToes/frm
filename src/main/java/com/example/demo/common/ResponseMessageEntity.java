@@ -47,4 +47,8 @@ public class ResponseMessageEntity<T> {
         this.message = message;
         this.data = data;
     }
+
+    public ResponseMessageEntity(T data) {
+        this.data = data;
+    }
 }

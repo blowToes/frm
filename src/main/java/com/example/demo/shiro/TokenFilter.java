@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public class TokenFilter extends AccessControlFilter {
 
@@ -30,28 +31,23 @@ public class TokenFilter extends AccessControlFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
         logger.info("============== TokenFilter 是否允许登陆过滤器 token 令牌验证 ========================");
-        Subject subject = SecurityUtils.getSubject();
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        //获取toen 令牌
         String ticket = request.getHeader("ticket");
-        //判断是否为空
-        if (null != ticket) {
-            Session session = SecurityUtils.getSubject().getSession();
-            TsUser user = (TsUser) session.getAttribute(ticket);
-            if (null == user) {
-                return false;
-            } else {
-                UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getPwdword() );
-                try {
-                    // 判断用户名和 密码是否正确
-                    subject.login(token);
-                } catch (AuthenticationException e) {
-                    return false;
-                }
-                return true;
-            }
+        Subject subject = SecurityUtils.getSubject();
+        //先判断是否是登陆请求
+        if(isLoginRequest(servletRequest,servletResponse)){
+            return true;
+        }else{
+            Session session = subject.getSession();
+            // 获取令牌
+           if(ticket != null){
+               if(null != session.getAttribute(ticket)){
+                   return true;
+               }else{
+                   throw new AuthenticationException("登陆失效，请重新登陆！");
+               }
+           }
         }
-
         logger.info("============== isAccessAllowed end  ===========================");
         return false;
     }
@@ -83,5 +79,10 @@ public class TokenFilter extends AccessControlFilter {
     @Override
     protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
         return super.isLoginRequest(request, response);
+    }
+
+    @Override
+    protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+        super.saveRequestAndRedirectToLogin(request, response);
     }
 }

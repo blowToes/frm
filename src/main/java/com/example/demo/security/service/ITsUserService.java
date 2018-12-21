@@ -19,4 +19,9 @@ public interface ITsUserService extends IService<TsUser> {
     TsUser register(TsUser tsUser);
 
     List<RolePermissions> queryRolePermissions(String username);
+
+    /**
+     * 根据用户名获取用户信息
+     */
+    TsUser queryUserByWrraper(String username);
 }

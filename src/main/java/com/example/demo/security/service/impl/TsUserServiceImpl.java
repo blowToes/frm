@@ -1,5 +1,6 @@
 package com.example.demo.security.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.security.dto.RolePermissions;
 import com.example.demo.security.entity.TsUser;
 import com.example.demo.security.mapper.TsUserMapper;
@@ -48,6 +49,14 @@ public class TsUserServiceImpl extends ServiceImpl<TsUserMapper, TsUser> impleme
     @Override
     public List<RolePermissions> queryRolePermissions(String username) {
         return userMapper.queryRolePermissionsByUserName(username);
+    }
+
+    @Override
+    public TsUser queryUserByWrraper(String username) {
+        TsUser tsUser = new TsUser();
+        tsUser.setAccount(username);
+        QueryWrapper wrapper = new QueryWrapper(tsUser);
+        return userMapper.selectOne(wrapper);
     }
 
     public static void main(String[] args) {
