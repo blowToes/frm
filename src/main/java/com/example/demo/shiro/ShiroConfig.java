@@ -2,8 +2,6 @@ package com.example.demo.shiro;
 
 import com.example.demo.security.entity.TsPermissions;
 import com.example.demo.security.service.ITsPermissionsService;
-import com.example.demo.security.service.ITsUserService;
-import com.google.common.cache.CacheBuilder;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
@@ -12,13 +10,11 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 @Configuration
@@ -41,20 +37,16 @@ public class ShiroConfig {
     private void urlFilterMethod(ShiroFilterFactoryBean shiroFilterFactoryBean) {
         Map<String, Filter> mapFilter = new HashMap<>();
         mapFilter.put("authc", tokenFilter());
-//        shiroFilterFactoryBean.setFilters(mapFilter);
         //设置登录连接
         shiroFilterFactoryBean.setLoginUrl("/notLogin");
         // 设置无权限跳转连接
         shiroFilterFactoryBean.setUnauthorizedUrl("/notRole");
         // 设置拦截器
-
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-        filterChainDefinitionMap.put("/query/users","perms[管理员权限]");
         // 游客开发权限
         filterChainDefinitionMap.put("/guest/**", "anon");
-        //开放登陆接口
-        filterChainDefinitionMap.put("/user/**", "anon");
-
+        // 权限控制测试
+//        filterChainDefinitionMap.put("/api/security/ts-user/query/page/users", "perms['user:add:*']");
         // 自定义权限连
         custormPermission(filterChainDefinitionMap);
         // 其余的一切端口都需要拦截
@@ -69,7 +61,7 @@ public class ShiroConfig {
         //获取所有权限限制的URL
         List<TsPermissions> list = permissionsService.list();
         list.forEach(tsPermissions -> {
-            filterChainDefinitionMap.put(tsPermissions.getPermissionUrl(), "perms[" + tsPermissions.getPermissionName() + "]");
+            filterChainDefinitionMap.put(tsPermissions.getPermissionUrl(), "perms[" + tsPermissions.getPermissionName() + ":*]");
         });
     }
 

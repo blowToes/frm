@@ -71,15 +71,18 @@ public class ShiroRealm extends AuthorizingRealm {
         TsUser dataUser = iTsUserService.getOne(wrapper);
         if (null == token.getPassword()) throw new AccountException("密码不能为空");
         LOGGER.info(" ============ 认证 doGetAuthenticationInfo ====================");
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(dataUser.getAccount(), dataUser.getPwdword(),ByteSource.Util.bytes(dataUser.getAccount()), getName());
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(dataUser.getAccount(), dataUser.getPwdword(), ByteSource.Util.bytes(dataUser.getAccount()), getName());
         return simpleAuthenticationInfo;
     }
+
     /**
-     *  将角色和权限添加到SimpleAuthorizationInfo中
+     * 将角色和权限添加到SimpleAuthorizationInfo中
+     *
      * @param username
      * @return
      */
     private SimpleAuthorizationInfo getSimpleAuthorizationInfo(String username) {
+        LOGGER.info(" =================授权 getSimpleAuthorizationInfo start======================");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         // 添加角色
         Set<String> roles = Sets.newHashSet();
@@ -91,6 +94,7 @@ public class ShiroRealm extends AuthorizingRealm {
         });
         authorizationInfo.setRoles(roles);
         authorizationInfo.setStringPermissions(permissions);
+        LOGGER.info(" =================授权 getSimpleAuthorizationInfo end======================");
         return authorizationInfo;
     }
 }

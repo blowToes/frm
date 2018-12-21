@@ -4,11 +4,12 @@ spring:
 
 
 mybatis-plus:
-  mapper-locations: classpath*:mapping/**/*.xml
+  mapper-locations: classpath*:mybatis/mapper/**/*.xml
 
 #日志
 logging:
   level:
     com.example.demo.sys.mapper: debug
+    org.apache.shiro.web.filter: debug
 
 restPath: /api

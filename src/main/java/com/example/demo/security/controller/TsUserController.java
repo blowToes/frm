@@ -9,6 +9,7 @@ import com.example.demo.security.entity.TsUser;
 import com.example.demo.security.service.ITsUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class TsUserController {
     private ITsUserService iTsUserService;
 
     @ApiOperation("查询所有的用户列表")
+//    @RequiresPermissions("")
     @GetMapping("/query/users")
     public List<TsUser> queryUserList(){
         return iTsUserService.list();
@@ -39,7 +41,6 @@ public class TsUserController {
     @ApiOperation("查询所有的用户列表")
     @PostMapping(value = "/query/page/users")
     public IPage<TsUser> queryUserListPage(TsPermissions tsPermissions){
-        QueryWrapper wrapper = new QueryWrapper();
         IPage<TsUser> page = new Page<TsUser>();
         page.setCurrent(1);
         page.setSize(10);

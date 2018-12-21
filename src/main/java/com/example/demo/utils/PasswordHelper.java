@@ -30,7 +30,7 @@ public class PasswordHelper {
     //解密
 
     public static void main(String[] args) {
-        System.out.println(md5PasswordGenerator("admin","admin"));
+        System.out.println(md5PasswordGenerator("123345","zhangsan"));
     }
 
 }
