@@ -1,15 +1,22 @@
 package com.example.demo.shiro;
 
+import com.example.demo.security.dto.RoleUrls;
+import com.example.demo.security.dto.UrlRoles;
 import com.example.demo.security.entity.TsPermissions;
+import com.example.demo.security.entity.TsRole;
 import com.example.demo.security.service.ITsPermissionsService;
+import com.example.demo.security.service.ITsRoleService;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,10 +26,13 @@ import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
+    private final static Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
 
     @Autowired
     private ITsPermissionsService permissionsService;
 
+    @Autowired
+    private ITsRoleService roleService;
 
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
@@ -45,16 +55,34 @@ public class ShiroConfig {
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // 游客开发权限
         filterChainDefinitionMap.put("/guest/**", "anon");
-        // 权限控制测试
-//        filterChainDefinitionMap.put("/api/security/ts-user/query/page/users", "perms['user:add:*']");
+        // 添加角色权限
+        customeRoles(filterChainDefinitionMap);
         // 自定义权限连
         custormPermission(filterChainDefinitionMap);
         // 其余的一切端口都需要拦截
         filterChainDefinitionMap.put("/api/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
+    private void customeRoles(LinkedHashMap<String, String> filterChainDefinitionMap) {
+        List<UrlRoles> urlRoles = roleService.queryUrlRoles();
+        urlRoles.forEach(urlRole -> {
+            //拼接roles的字符串
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("roles[");
+            List<TsRole> roles = urlRole.getRoles();
+            for (int i = 0; i < roles.size(); i++) {
+                stringBuffer.append(roles.get(i).getRoleName());
+                if (i != (roles.size() - 1)) stringBuffer.append(",");
+            }
+            stringBuffer.append("]");
+            filterChainDefinitionMap.put(urlRole.getPermissionUrl(), stringBuffer.toString());
+            LOGGER.info("roles = [{}]", stringBuffer.toString());
+        });
+    }
 
     private void custormPermission(LinkedHashMap<String, String> filterChainDefinitionMap) {
+
+//        Thread.currentThread();
         // 获取指定缓存
 //        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
 //                .expireAfterAccess(30, TimeUnit.DAYS);
@@ -63,6 +91,7 @@ public class ShiroConfig {
         list.forEach(tsPermissions -> {
             filterChainDefinitionMap.put(tsPermissions.getPermissionUrl(), "perms[" + tsPermissions.getPermissionName() + ":*]");
         });
+
     }
 
     // 设置SecurityManager

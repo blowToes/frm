@@ -3,6 +3,7 @@ package com.example.demo.shiro;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.security.dto.RolePermissions;
 import com.example.demo.security.entity.TsUser;
+import com.example.demo.security.service.ITsRoleService;
 import com.example.demo.security.service.ITsUserService;
 import com.google.common.collect.Sets;
 import org.apache.shiro.authc.*;
@@ -31,6 +32,10 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private ITsUserService iTsUserService;
+
+
+    @Autowired
+    private ITsRoleService roleService;
 
 
     /**

@@ -26,6 +26,8 @@ public class TsPermissions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String id;
+
     /**
      * 权限名
      */

@@ -21,6 +21,9 @@ public class TsRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    private String id;
+
     /**
      * 角色名
      */

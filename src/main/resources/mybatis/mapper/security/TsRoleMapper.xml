@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.security.mapper.TsRoleMapper">
+
+    <resultMap id="RoleUrlsMap" type="com.example.demo.security.dto.RoleUrls">
+        <result property="role_name" column="role_name"/>
+        <collection property="permissions" ofType="com.example.demo.security.entity.TsPermissions">
+            <result property="permissionName" column="permission_name"/>
+            <result property="permissionUrl" column="permission_url"/>
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="UrlRolesMap" type="com.example.demo.security.dto.UrlRoles">
+        <result property="permissionName" column="permission_name"/>
+        <result property="permissionUrl" column="permission_url"/>
+        <collection property="roles" ofType="com.example.demo.security.entity.TsRole">
+            <result property="roleName" column="role_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryRoleUrls" resultMap="RoleUrlsMap">
+        SELECT
+            t1.role_name,
+            t3.permission_url,
+            t3.permission_name
+        FROM
+            ts_role AS t1
+                LEFT JOIN ts_role_permission AS t2 ON t1.id = t2.role_id
+                LEFT JOIN ts_permissions AS t3 ON t2.perssion_id = t3.id
+    </select>
+    <select id="queryUrlRoles" resultMap="UrlRolesMap">
+        SELECT
+            t1.role_name,
+            t3.permission_url,
+            t3.permission_name
+        FROM
+            ts_role AS t1
+                LEFT JOIN ts_role_permission AS t2 ON t1.id = t2.role_id
+                LEFT JOIN ts_permissions AS t3 ON t2.perssion_id = t3.id
+    </select>
 </mapper>
