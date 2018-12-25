@@ -1,4 +1,5 @@
 package com.example.demo.shiro;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.security.dto.RolePermissions;
 import com.example.demo.security.entity.TsUser;
@@ -14,8 +15,10 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 import java.util.Set;
+
 /**
  * @ClassName ShiroRealm
  * @Description TO_DO
