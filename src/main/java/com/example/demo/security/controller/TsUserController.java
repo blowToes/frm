@@ -61,8 +61,8 @@ public class TsUserController {
     public List<TsUser> queryUser(@RequestParam String account, @RequestParam String sex) {
 
         TsUser user = new TsUser();
-        user.setAccount(account);
-        user.setSex(sex);
+   /*     user.setAccount(account);
+        user.setSex(sex);*/
         QueryWrapper wrapper = new QueryWrapper(user);
         return iTsUserService.list(wrapper);
     }

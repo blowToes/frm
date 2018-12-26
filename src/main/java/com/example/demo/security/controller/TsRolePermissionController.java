@@ -1,13 +1,14 @@
 package com.example.demo.security.controller;
 
 
+import com.example.demo.security.entity.TsRole;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author jobob
@@ -16,5 +17,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/security/ts-role-permission")
 public class TsRolePermissionController {
-
 }
