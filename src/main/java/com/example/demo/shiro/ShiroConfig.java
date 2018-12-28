@@ -1,6 +1,5 @@
 package com.example.demo.shiro;
 
-import com.example.demo.security.dto.RoleUrls;
 import com.example.demo.security.dto.UrlRoles;
 import com.example.demo.security.entity.TsPermissions;
 import com.example.demo.security.entity.TsRole;
@@ -18,19 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Configuration
 public class ShiroConfig {
     private final static Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
-
     @Autowired
     private ITsPermissionsService permissionsService;
-
     @Autowired
     private ITsRoleService roleService;
 
@@ -41,12 +36,15 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         // url拦截 跳转和拦截器的设置
         urlFilterMethod(shiroFilterFactoryBean);
+
         return shiroFilterFactoryBean;
     }
 
     private void urlFilterMethod(ShiroFilterFactoryBean shiroFilterFactoryBean) {
-        Map<String, Filter> mapFilter = new HashMap<>();
-        mapFilter.put("authc", tokenFilter());
+        // 自定义拦截器的配置
+        Map<String, Filter> mapFilter = new LinkedHashMap <>();
+        mapFilter.put("ticket", tokenFilter());
+        shiroFilterFactoryBean.setFilters(mapFilter);
         //设置登录连接
         shiroFilterFactoryBean.setLoginUrl("/notLogin");
         // 设置无权限跳转连接
@@ -59,10 +57,13 @@ public class ShiroConfig {
         customeRoles(filterChainDefinitionMap);
         // 自定义权限连
         custormPermission(filterChainDefinitionMap);
+
         // 其余的一切端口都需要拦截
-        filterChainDefinitionMap.put("/api/**", "authc");
+        filterChainDefinitionMap.put("/api/**", "ticket");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
     }
+
     private void customeRoles(LinkedHashMap<String, String> filterChainDefinitionMap) {
         List<UrlRoles> urlRoles = roleService.queryUrlRoles();
         urlRoles.forEach(urlRole -> {
@@ -81,17 +82,12 @@ public class ShiroConfig {
     }
 
     private void custormPermission(LinkedHashMap<String, String> filterChainDefinitionMap) {
-
-//        Thread.currentThread();
-        // 获取指定缓存
-//        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
-//                .expireAfterAccess(30, TimeUnit.DAYS);
         //获取所有权限限制的URL
         List<TsPermissions> list = permissionsService.list();
         list.forEach(tsPermissions -> {
-            filterChainDefinitionMap.put(tsPermissions.getPermissionUrl(), "perms[" + tsPermissions.getPermissionName() + ":*]");
-        });
-
+                    filterChainDefinitionMap.put(tsPermissions.getPermissionUrl(), "perms[" + tsPermissions.getPermissionName() + ":*]");
+                }
+        );
     }
 
     // 设置SecurityManager

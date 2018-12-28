@@ -36,20 +36,19 @@ public class LoginController {
     public ResponseMessageEntity<String> loginAccount(String account, String pwd) {
         UsernamePasswordToken token = new UsernamePasswordToken(account, pwd);
         Subject subject = SecurityUtils.getSubject();
-        String ticket = "";
+        String ticket;
         try {
             subject.login(token);
             TsUser user = iTsUserService.queryUserByWrraper(account);
             Session session = subject.getSession();
-            ticket = UUIDGenerator.generatorKey_32();
+            ticket = session.getId().toString();
             session.setAttribute(ticket, user);
             session.setTimeout(30000);
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return Results.error();
         }
-        new ResponseMessageEntity<String>(ticket, "200", MessageUtil.LOGIN_SUCCESS);
-        return Results.success(MessageUtil.LOGIN_SUCCESS);
+        return new ResponseMessageEntity(ticket, "200", MessageUtil.LOGIN_SUCCESS);
     }
 
     @ApiOperation("注销")

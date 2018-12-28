@@ -1,9 +1,7 @@
 package com.example.demo.shiro;
 
-import com.example.demo.security.entity.TsUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -18,6 +16,7 @@ import java.io.IOException;
 public class TokenFilter extends AccessControlFilter {
 
     private final static Logger logger = LoggerFactory.getLogger(TokenFilter.class);
+    private final static String LoginUrl = "/login/user";
 
     /**
      * 是否允许访问
@@ -31,10 +30,13 @@ public class TokenFilter extends AccessControlFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
         logger.info("============== TokenFilter 是否允许登陆过滤器 token 令牌验证 ========================");
+        setLoginUrl(LoginUrl);
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String ticket = request.getHeader("ticket");
         Subject subject = SecurityUtils.getSubject();
         //先判断是否是登陆请求
+        boolean loginRequest = isLoginRequest(servletRequest, servletResponse);
+        System.out.println(loginRequest);
         if(isLoginRequest(servletRequest,servletResponse)){
             return true;
         }else{
@@ -46,10 +48,11 @@ public class TokenFilter extends AccessControlFilter {
                }else{
                    throw new AuthenticationException("登陆失效，请重新登陆！");
                }
+           }else {
+               // Url不是登陆请求，令牌是null
+               throw new AuthenticationException("请先登陆！");
            }
         }
-        logger.info("============== isAccessAllowed end  ===========================");
-        return false;
     }
 
     /**
@@ -84,5 +87,20 @@ public class TokenFilter extends AccessControlFilter {
     @Override
     protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
         super.saveRequestAndRedirectToLogin(request, response);
+    }
+
+    @Override
+    public void setLoginUrl(String loginUrl) {
+        super.setLoginUrl(loginUrl);
+    }
+
+    @Override
+    protected void saveRequest(ServletRequest request) {
+        super.saveRequest(request);
+    }
+
+    @Override
+    protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+        super.redirectToLogin(request, response);
     }
 }
